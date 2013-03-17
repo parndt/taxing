@@ -1,15 +1,14 @@
 require 'csv'
+require 'forwardable'
 
 class Taxes
+  extend Forwardable
+  def_delegators :table, :headers
 
   attr_accessor :path
 
   def initialize(path)
     @path = path
-  end
-
-  def columns
-    %w(date unique_id transaction_type cheque_number payee memo amount)
   end
 
   def table
