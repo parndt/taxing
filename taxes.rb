@@ -14,16 +14,16 @@ class Taxes
   end
 
   def rows
-    @rows ||= CSV.parse(csv)
+    @rows ||= CSV.parse(csv).freeze
   end
 
   def matrix
-    @matrix ||= rows.map do |row|
-      columns.each_with_index.inject({}) do |hash, (title, index)|
+    @matrix ||= rows.map { |row|
+      columns.each_with_index.inject(Hash.new) do |hash, (title, index)|
         hash[title] = row[index]
         hash
       end
-    end
+    }.freeze
   end
 
 end
