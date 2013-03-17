@@ -1,5 +1,4 @@
 require 'csv'
-require 'pry'
 
 class Taxes
 
@@ -20,4 +19,6 @@ class Taxes
 end
 
 taxes = Taxes.new File.expand_path("~/taxes.csv")
+
+require 'pry'
 binding.pry
