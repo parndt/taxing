@@ -3,30 +3,21 @@ require 'pry'
 
 class Taxes
 
-  attr_accessor :csv
+  attr_accessor :path
 
-  def initialize(csv)
-    @csv = csv
+  def initialize(path)
+    @path = path
   end
 
   def columns
     %w(date unique_id transaction_type cheque_number payee memo amount)
   end
 
-  def rows
-    @rows ||= CSV.parse(csv).freeze
-  end
-
-  def matrix
-    @matrix ||= rows.map { |row|
-      columns.each_with_index.inject(Hash.new) do |hash, (title, index)|
-        hash[title] = row[index]
-        hash
-      end
-    }.freeze
+  def table
+    @table ||= CSV.table(path)
   end
 
 end
 
-t = Taxes.new(File.read(File.expand_path("~/taxes.csv")))
+taxes = Taxes.new File.expand_path("~/taxes.csv")
 binding.pry
