@@ -3,7 +3,7 @@ require 'pry'
 
 class Taxes
 
-  attr_accessor :csv, :header_row
+  attr_accessor :csv
 
   def initialize(csv)
     @csv = csv
@@ -14,11 +14,7 @@ class Taxes
   end
 
   def rows
-    @rows ||= begin
-      rows = CSV.parse(csv)
-      self.header_row = rows.shift
-      rows
-    end
+    @rows ||= CSV.parse(csv)
   end
 
   def matrix
@@ -32,3 +28,5 @@ class Taxes
 
 end
 
+t = Taxes.new(File.read(File.expand_path("~/taxes.csv")))
+binding.pry
