@@ -26,17 +26,24 @@ class Tax
 end
 
 taxes = Tax.new File.expand_path("~/taxes.csv")
-t = taxes.filter(:memo)
-puts "====== #{t.income.length} Income =====\n"
-t.income.group_by(:memo, :first_split_with => ' ').each do |key, values|
-  puts "==== #{values.length} entries for #{key}"
-  values.each(&method(:puts))
-end
-puts "\n===== #{t.expenses.length} Expenses =====\n"
-t.expenses.group_by(:memo, :first_split_with => ' ').each do |key, values|
-  puts "==== #{values.length} entries for #{key}"
-  values.each(&method(:puts))
-end
 
-require 'pry'
-binding.pry
+t = taxes.filter(:memo)
+File.open("#{File.dirname(__FILE__)}/income.txt", 'w+') do |f|
+  f.puts "====== #{t.income.length} Income =====\n"
+  t.income.group_by(:payee).each do |key, values|
+    f.puts "==== #{values.length} entries for #{key}"
+    values.each{|v| f.puts v}
+  end
+
+  subtotal = t.income.map{|e| e[:amount]}.inject(&:+)
+  f.puts "\nTotal\n#{subtotal.round(2)}"
+end
+File.open("#{File.dirname(__FILE__)}/expenses.txt", 'w+') do |f|
+  f.puts "\n===== #{t.expenses.length} Expenses =====\n"
+  t.expenses.group_by(:payee).each do |key, values|
+    f.puts "==== #{values.length} entries for #{key}"
+    values.each{|v| f.puts v}
+  end
+
+  f.puts "\nTotal\n#{t.expenses.map{|e| e[:amount]}.inject(&:+).round(2)}"
+end

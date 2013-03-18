@@ -28,5 +28,5 @@ class Filtered
     end
   end
 
-  def_delegators :table, :each, :map, :inject, :length
+  def_delegators :table, :each, :map, :select, :reject, :inject, :length
 end
